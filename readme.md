@@ -1,0 +1,1 @@
+# Simple educational project to connect PC to Ardupilot with Mavlink and Rust
