@@ -30,7 +30,7 @@ flowchart TD
 ```sh
 cargo run --example connect
 ```
-Example output
+#### Example output
 ```
 Started...
 Connected to tcpout:127.0.0.1:14550
@@ -38,4 +38,27 @@ No new messages
 Received heartbeat, header: MavHeader { system_id: 1, component_id: 1, sequence: 162 }, HEARTBEAT_DATA { custom_mode: 0, mavtype: MAV_TYPE_QUADROTOR, autopilot: MAV_AUTOPILOT_ARDUPILOTMEGA, base_mode: MavModeFlag(MAV_MODE_FLAG_MANUAL_INPUT_ENABLED | MAV_MODE_FLAG_STABILIZE_ENABLED | MAV_MODE_FLAG_CUSTOM_MODE_ENABLED), system_status: MAV_STATE_STANDBY, mavlink_version: 3 }
 Received heartbeat, header: MavHeader { system_id: 1, component_id: 1, sequence: 15 }, HEARTBEAT_DATA { custom_mode: 0, mavtype: MAV_TYPE_QUADROTOR, autopilot: MAV_AUTOPILOT_ARDUPILOTMEGA, base_mode: MavModeFlag(MAV_MODE_FLAG_MANUAL_INPUT_ENABLED | MAV_MODE_FLAG_STABILIZE_ENABLED | MAV_MODE_FLAG_CUSTOM_MODE_ENABLED), system_status: MAV_STATE_STANDBY, mavlink_version: 3 }
 N
+...
 ```
+
+2. Receive and parse messages
+```sh
+cargo run --example receive_message
+``` 
+#### Example output
+```
+Started...
+Connected to tcpout:127.0.0.1:14550
+ATTITUDE, roll: -0.05967511, , pitch: -0.07107734, yaw: -8.010325
+GLOBAL_POSITION_INT, lat: -35.363262, , lon: 149.1652373, , alt: 584.08, relative_alt: -0.006
+No new messages
+ATTITUDE, roll: -0.059504297, , pitch: -0.07090219, yaw: -8.010025
+...
+```
+
+[IN-PROGRESS]3. Send heartbeat
+[IN-PROGRESS]4. Request parameters
+[IN-PROGRESS]5. Change flight mode
+[IN-PROGRESS]5. Arm/Disarm drone
+[IN-PROGRESS]5. Send RC overrides
+[IN-PROGRESS]5. Upload mission with waypoints
