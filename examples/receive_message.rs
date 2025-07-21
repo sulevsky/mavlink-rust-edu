@@ -17,7 +17,7 @@ fn main() {
                 }
                 mavlink::ardupilotmega::MavMessage::GLOBAL_POSITION_INT(data) => {
                     println!(
-                        "GLOBAL_POSITION_INT, lat: {:?}, , lon: {:?}, , alt: {:?}, relative_alt: {:?}",
+                        "GLOBAL_POSITION_INT, lat: {:?}, lon: {:?}, alt: {:?}, relative_alt: {:?}",
                         (data.lat as f64) / 10_000_000.0,
                         (data.lon as f64) / 10_000_000.0,
                         (data.alt as f64) / 1_000.0,
