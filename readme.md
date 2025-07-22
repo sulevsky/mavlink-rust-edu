@@ -74,8 +74,18 @@ Sending heartbeat message: HEARTBEAT(HEARTBEAT_DATA { custom_mode: 0, mavtype: M
 - [MAVLink System and Component ID Assignment](https://mavlink.io/en/services/mavlink_id_assignment.html)
 - [Heartbeat/Connection Protocol](https://mavlink.io/en/services/heartbeat.html)
 
+4. Request parameters
+```sh
+cargo run --example request_parameters.rs
+``` 
+#### Example output
+```
+TODO
+```
+#### Additional info
+TODO
+
 ## TODO
-[IN-PROGRESS]4. Request parameters
 [IN-PROGRESS]5. Change flight mode
 [IN-PROGRESS]5. Arm/Disarm drone
 [IN-PROGRESS]5. Send RC overrides
