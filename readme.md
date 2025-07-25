@@ -76,14 +76,47 @@ Sending heartbeat message: HEARTBEAT(HEARTBEAT_DATA { custom_mode: 0, mavtype: M
 
 4. Request parameters
 ```sh
-cargo run --example request_parameters.rs
+cargo run --example request_parameters
 ``` 
 #### Example output
 ```
-TODO
+Started...
+Connected to tcpout:127.0.0.1:14550
+autopilot_system_id: 1
+autopilot_component_id: 1
+Sending param request list message: PARAM_REQUEST_LIST(PARAM_REQUEST_LIST_DATA { target_system: 1, target_component: 1 })
+0
+id:    FORMAT_VERSION
+value: 120
+
+1
+id:    SYSID_THISMAV
+value: 1
+
+2
+id:    SYSID_MYGCS
+value: 255
+
+3
+id:    PILOT_THR_FILT
+value: 0
+
+4
+id:    PILOT_TKOFF_ALT
+value: 0
+
+5
+id:    PILOT_THR_BHV
+value: 0
+
+6
+id:    TELEM_DELAY
+value: 0
+...
 ```
 #### Additional info
-TODO
+- [Parameter Protocol](https://mavlink.io/en/services/parameter.html)
+
 
 ## TODO
 [IN-PROGRESS]5. Change flight mode

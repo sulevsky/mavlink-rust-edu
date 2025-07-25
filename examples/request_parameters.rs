@@ -1,6 +1,10 @@
 use std::{thread, time::Duration};
 
-use mavlink::{MavConnection, ardupilotmega::MavMessage};
+use mavlink::{
+    MavConnection,
+    ardupilotmega::{MavMessage, PARAM_VALUE_DATA},
+    error::MessageReadError,
+};
 
 const SERVER_ADDRESS: &str = "tcpout:127.0.0.1:14550";
 
@@ -48,18 +52,42 @@ fn listen_for_param_list_messages(connection: &Box<dyn MavConnection<MavMessage>
     loop {
         match connection.try_recv() {
             Ok((_, msg)) => match msg {
-                mavlink::ardupilotmega::MavMessage::PARAM_REQUEST_LIST(data) => {
-                    println!("PARAM_REQUEST_LIST: {:?}", data);
+                mavlink::ardupilotmega::MavMessage::PARAM_VALUE(data) => {
+                    print_param_data(&data);
                 }
                 _ => {
                     // ignore other messages
                 }
             },
+            Err(MessageReadError::Io(e)) => {
+                if e.kind() == std::io::ErrorKind::WouldBlock {
+                    println!("No new messages");
+                    thread::sleep(Duration::from_secs(1));
+                    continue;
+                } else {
+                    println!("recv error: {e:?}");
+                    panic!()
+                }
+            }
             Err(e) => {
                 println!("recv error: {e:?}");
                 panic!()
             }
         }
-        thread::sleep(Duration::from_secs(1));
     }
+}
+fn print_param_data(data: &PARAM_VALUE_DATA) {
+    let param_id = parse_param_id(&data.param_id);
+    println!("{}", data.param_index);
+    println!("id:    {}", param_id);
+    println!("value: {}", data.param_value);
+    println!();
+}
+
+fn parse_param_id(param_id: &[u8; 16]) -> String {
+    param_id
+        .iter()
+        .filter(|&b| *b != 0)
+        .map(|&b| char::from(b))
+        .collect()
 }
