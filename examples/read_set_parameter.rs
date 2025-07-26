@@ -1,4 +1,4 @@
-use std::{thread, time::Duration};
+use std::{io::Read, thread, time::Duration};
 
 use mavlink::{
     MavConnection,
@@ -16,10 +16,11 @@ fn main() {
     println!("autopilot_system_id: {autopilot_system_id}");
     println!("autopilot_component_id: {autopilot_component_id}");
     let header = mavlink::MavHeader::default();
-    let param_request_list_message = mavlink::ardupilotmega::MavMessage::PARAM_REQUEST_LIST(
-        mavlink::ardupilotmega::PARAM_REQUEST_LIST_DATA {
+    let param_request_list_message = mavlink::ardupilotmega::MavMessage::PARAM_REQUEST_READ(
+        mavlink::ardupilotmega::PARAM_REQUEST_READ_DATA {
             target_system: autopilot_system_id,
             target_component: autopilot_component_id,
+            param_id: ,
         },
     );
     loop {
@@ -90,4 +91,12 @@ fn decode_param_id(param_id: &[u8; 16]) -> String {
         .filter(|&b| *b != 0)
         .map(|&b| char::from(b))
         .collect()
+}
+
+fn encode_param_id(param_id: &str) -> [u8; 16] {
+    let mut result = [0u8; 16];
+    for (i, b) in param_id.as_bytes().iter().enumerate(){
+        result[i]=*b;
+    }
+    result
 }

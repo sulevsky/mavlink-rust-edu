@@ -26,7 +26,7 @@ flowchart TD
 ```
 
 ## Examples
-1. Connect to the vehicle
+### 1. Connect to the vehicle
 ```sh
 cargo run --example connect
 ```
@@ -41,7 +41,7 @@ N
 ...
 ```
 
-2. Receive and parse messages
+### 2. Receive and parse messages
 ```sh
 cargo run --example receive_message
 ``` 
@@ -58,7 +58,7 @@ GLOBAL_POSITION_INT, lat: -35.3632622, lon: 149.1652375, alt: 584.08, relative_a
 ...
 ```
 
-3. Send a heartbeat message from Rust
+### 3. Send a heartbeat message from Rust
 ```sh
 cargo run --example send_heartbeat
 ``` 
@@ -74,7 +74,7 @@ Sending heartbeat message: HEARTBEAT(HEARTBEAT_DATA { custom_mode: 0, mavtype: M
 - [MAVLink System and Component ID Assignment](https://mavlink.io/en/services/mavlink_id_assignment.html)
 - [Heartbeat/Connection Protocol](https://mavlink.io/en/services/heartbeat.html)
 
-4. Request parameters
+### 4. Request parameters
 ```sh
 cargo run --example request_parameters
 ``` 
@@ -117,6 +117,7 @@ value: 0
 #### Additional info
 - [Parameter Protocol](https://mavlink.io/en/services/parameter.html)
 
+#### 5. Read parameter / Set parameter
 
 ## TODO
 [IN-PROGRESS]5. Change flight mode
