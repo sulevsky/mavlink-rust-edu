@@ -22,16 +22,14 @@ fn main() {
             target_component: autopilot_component_id,
         },
     );
-    loop {
-        println!(
-            "Sending param request list message: {:?}",
-            param_request_list_message
-        );
-        connection
-            .send(&header, &param_request_list_message)
-            .unwrap();
-        listen_for_param_list_messages(&connection);
-    }
+    println!(
+        "Sending param request list message: {:?}",
+        param_request_list_message
+    );
+    connection
+        .send(&header, &param_request_list_message)
+        .unwrap();
+    listen_for_param_list_messages(&connection);
 }
 
 fn fetch_system_id(connection: &Box<dyn MavConnection<MavMessage> + Send + Sync>) -> (u8, u8) {

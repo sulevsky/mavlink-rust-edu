@@ -118,6 +118,30 @@ value: 0
 - [Parameter Protocol](https://mavlink.io/en/services/parameter.html)
 
 #### 5. Read parameter / Set parameter
+```sh
+cargo run --example read_set_parameter
+``` 
+#### Example output
+```
+Started...
+Connected to tcpout:127.0.0.1:14550
+autopilot_system_id: 1
+autopilot_component_id: 1
+Sending param request read message: PARAM_REQUEST_READ(PARAM_REQUEST_READ_DATA { param_index: -1, target_system: 1, target_component: 1, param_id: [83, 73, 77, 95, 83, 80, 69, 69, 68, 85, 80, 0, 0, 0, 0, 0] })
+65535
+id:    SIM_SPEEDUP
+value: 42
+
+Sending param request set message: PARAM_SET(PARAM_SET_DATA { param_value: 42.0, target_system: 1, target_component: 1, param_id: [83, 73, 77, 95, 83, 80, 69, 69, 68, 85, 80, 0, 0, 0, 0, 0], param_type: MAV_PARAM_TYPE_REAL32 })
+Reading updated parameter
+65535
+id:    SIM_SPEEDUP
+value: 42
+```
+#### Additional info
+- [Read Single Parameter](https://mavlink.io/en/services/parameter.html#read_single)
+- [Write Parameters](https://mavlink.io/en/services/parameter.html#write)
+
 
 ## TODO
 [IN-PROGRESS]5. Change flight mode

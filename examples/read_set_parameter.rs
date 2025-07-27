@@ -16,23 +16,41 @@ fn main() {
     println!("autopilot_system_id: {autopilot_system_id}");
     println!("autopilot_component_id: {autopilot_component_id}");
     let header = mavlink::MavHeader::default();
-    let param_request_list_message = mavlink::ardupilotmega::MavMessage::PARAM_REQUEST_READ(
+    let param_request_read_message = mavlink::ardupilotmega::MavMessage::PARAM_REQUEST_READ(
         mavlink::ardupilotmega::PARAM_REQUEST_READ_DATA {
             target_system: autopilot_system_id,
             target_component: autopilot_component_id,
-            param_id: ,
+            param_id: encode_param_id("SIM_SPEEDUP"),
+            param_index: -1,
         },
     );
-    loop {
-        println!(
-            "Sending param request list message: {:?}",
-            param_request_list_message
-        );
-        connection
-            .send(&header, &param_request_list_message)
-            .unwrap();
-        listen_for_param_list_messages(&connection);
-    }
+    println!(
+        "Sending param request read message: {:?}",
+        param_request_read_message
+    );
+    connection
+        .send(&header, &param_request_read_message)
+        .unwrap();
+    listen_for_param_read_messages(&connection);
+
+    let param_request_set_message =
+        mavlink::ardupilotmega::MavMessage::PARAM_SET(mavlink::ardupilotmega::PARAM_SET_DATA {
+            target_system: autopilot_system_id,
+            target_component: autopilot_component_id,
+            param_id: encode_param_id("SIM_SPEEDUP"),
+            param_value: 42.0,
+            param_type: mavlink::ardupilotmega::MavParamType::MAV_PARAM_TYPE_REAL32,
+        });
+    println!(
+        "Sending param request set message: {:?}",
+        param_request_set_message
+    );
+    connection
+        .send(&header, &param_request_set_message)
+        .unwrap();
+
+    println!("Reading updated parameter");
+    listen_for_param_read_messages(&connection);
 }
 
 fn fetch_system_id(connection: &Box<dyn MavConnection<MavMessage> + Send + Sync>) -> (u8, u8) {
@@ -49,12 +67,13 @@ fn fetch_system_id(connection: &Box<dyn MavConnection<MavMessage> + Send + Sync>
     }
 }
 
-fn listen_for_param_list_messages(connection: &Box<dyn MavConnection<MavMessage> + Send + Sync>) {
+fn listen_for_param_read_messages(connection: &Box<dyn MavConnection<MavMessage> + Send + Sync>) {
     loop {
         match connection.try_recv() {
             Ok((_, msg)) => match msg {
                 mavlink::ardupilotmega::MavMessage::PARAM_VALUE(data) => {
                     print_param_data(&data);
+                    return;
                 }
                 _ => {
                     // ignore other messages
@@ -95,8 +114,8 @@ fn decode_param_id(param_id: &[u8; 16]) -> String {
 
 fn encode_param_id(param_id: &str) -> [u8; 16] {
     let mut result = [0u8; 16];
-    for (i, b) in param_id.as_bytes().iter().enumerate(){
-        result[i]=*b;
-    }
+    let bytes = param_id.as_bytes();
+    let len = bytes.len().min(16);
+    result[..len].copy_from_slice(&bytes[..len]);
     result
 }
