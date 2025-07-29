@@ -143,8 +143,42 @@ value: 42
 - [Write Parameters](https://mavlink.io/en/services/parameter.html#write)
 
 
+#### 6. Arm/Disarm drone
+```sh
+cargo run --example arm_disarm
+``` 
+#### Example output
+```
+Started...
+Connected to tcpout:127.0.0.1:14550
+Vehicle > autopilot_system_id: 1
+Vehicle > autopilot_component_id: 1
+Vehicle > DISARMED
+Vehicle > DISARMED
+Vehicle > DISARMED
+Vehicle > DISARMED
+Vehicle > DISARMED
+Sending ARM command: COMMAND_LONG(COMMAND_LONG_DATA { param1: 1.0, param2: 0.0, param3: 0.0, param4: 0.0, param5: 0.0, param6: 0.0, param7: 0.0, command: MAV_CMD_COMPONENT_ARM_DISARM, target_system: 1, target_component: 1, confirmation: 0 })
+Vehicle > Command MAV_CMD_COMPONENT_ARM_DISARM is MAV_RESULT_ACCEPTED
+Vehicle > ARMED
+Vehicle > ARMED
+Vehicle > ARMED
+Vehicle > ARMED
+Sending DISARM command: COMMAND_LONG(COMMAND_LONG_DATA { param1: 0.0, param2: 0.0, param3: 0.0, param4: 0.0, param5: 0.0, param6: 0.0, param7: 0.0, command: MAV_CMD_COMPONENT_ARM_DISARM, target_system: 1, target_component: 1, confirmation: 0 })
+Vehicle > ARMED
+Vehicle > Command MAV_CMD_COMPONENT_ARM_DISARM is MAV_RESULT_ACCEPTED
+Vehicle > DISARMED
+Vehicle > DISARMED
+Vehicle > DISARMED
+Vehicle > DISARMED
+Vehicle > DISARMED
+```
+#### Additional info
+- [Command Protocol](https://mavlink.io/en/services/command.html#command-protocol)
+- [MAV_CMD_COMPONENT_ARM_DISARM](https://mavlink.io/en/messages/common.html#MAV_CMD_COMPONENT_ARM_DISARM)
+- [MAV_MODE_FLAG](https://mavlink.io/en/messages/common.html#MAV_MODE_FLAG)
+
 ## TODO
-[IN-PROGRESS]5. Change flight mode
-[IN-PROGRESS]5. Arm/Disarm drone
+6. Change flight mode
 [IN-PROGRESS]5. Send RC overrides
 [IN-PROGRESS]5. Upload mission with waypoints

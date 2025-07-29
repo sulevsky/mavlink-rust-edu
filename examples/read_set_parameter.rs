@@ -1,4 +1,4 @@
-use std::{io::Read, thread, time::Duration};
+use std::{thread, time::Duration};
 
 use mavlink::{
     MavConnection,
