@@ -117,7 +117,7 @@ value: 0
 #### Additional info
 - [Parameter Protocol](https://mavlink.io/en/services/parameter.html)
 
-#### 5. Read parameter / Set parameter
+### 5. Read parameter / Set parameter
 ```sh
 cargo run --example read_set_parameter
 ``` 
@@ -143,7 +143,7 @@ value: 42
 - [Write Parameters](https://mavlink.io/en/services/parameter.html#write)
 
 
-#### 6. Arm/Disarm drone
+### 6. Arm/Disarm drone
 ```sh
 cargo run --example arm_disarm
 ``` 
@@ -178,7 +178,42 @@ Vehicle > DISARMED
 - [MAV_CMD_COMPONENT_ARM_DISARM](https://mavlink.io/en/messages/common.html#MAV_CMD_COMPONENT_ARM_DISARM)
 - [MAV_MODE_FLAG](https://mavlink.io/en/messages/common.html#MAV_MODE_FLAG)
 
+### 6. Change flight mode
+```sh
+cargo run --example fligh_mode
+``` 
+#### Example output
+```
+Started...
+Connected to tcpout:127.0.0.1:14550
+Vehicle > autopilot_system_id: 1
+Vehicle > autopilot_component_id: 1
+Vehicle > flight mode: STABILIZE(0)
+Vehicle > flight mode: STABILIZE(0)
+Vehicle > flight mode: STABILIZE(0)
+Vehicle > flight mode: STABILIZE(0)
+Sending set flight mode GUIDED command: COMMAND_LONG(COMMAND_LONG_DATA { param1: 1.0, param2: 4.0, param3: 0.0, param4: 0.0, param5: 0.0, param6: 0.0, param7: 0.0, command: MAV_CMD_DO_SET_MODE, target_system: 1, target_component: 1, confirmation: 0 })
+Vehicle > flight mode: STABILIZE(0)
+Vehicle > Command MAV_CMD_DO_SET_MODE is MAV_RESULT_ACCEPTED
+Vehicle > flight mode: GUIDED(4)
+Vehicle > flight mode: GUIDED(4)
+Vehicle > flight mode: GUIDED(4)
+Vehicle > flight mode: GUIDED(4)
+Vehicle > flight mode: GUIDED(4)
+Sending set flight mode STABILIZE command: COMMAND_LONG(COMMAND_LONG_DATA { param1: 1.0, param2: 0.0, param3: 0.0, param4: 0.0, param5: 0.0, param6: 0.0, param7: 0.0, command: MAV_CMD_DO_SET_MODE, target_system: 1, target_component: 1, confirmation: 0 })
+Vehicle > flight mode: GUIDED(4)
+Vehicle > Command MAV_CMD_DO_SET_MODE is MAV_RESULT_ACCEPTED
+Vehicle > flight mode: STABILIZE(0)
+Vehicle > flight mode: STABILIZE(0)
+Vehicle > flight mode: STABILIZE(0)
+Vehicle > flight mode: STABILIZE(0)
+Vehicle > flight mode: STABILIZE(0)
+Vehicle > flight mode: STABILIZE(0)
+```
+#### Additional info
+- [Command Protocol](https://mavlink.io/en/services/command.html#command-protocol)
+- [MAV_CMD_DO_SET_MODE](https://mavlink.io/en/messages/common.html#MAV_CMD_DO_SET_MODE)
+
 ## TODO
-6. Change flight mode
 [IN-PROGRESS]5. Send RC overrides
 [IN-PROGRESS]5. Upload mission with waypoints
