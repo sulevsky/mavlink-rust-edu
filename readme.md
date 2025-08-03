@@ -214,6 +214,31 @@ Vehicle > flight mode: STABILIZE(0)
 - [Command Protocol](https://mavlink.io/en/services/command.html#command-protocol)
 - [MAV_CMD_DO_SET_MODE](https://mavlink.io/en/messages/common.html#MAV_CMD_DO_SET_MODE)
 
+### 7. Upload mission with waypoints
+```sh
+cargo run --example mission
+``` 
+#### Example output
+```
+GSC > Started...
+GSC > Connected to tcpout:127.0.0.1:14550
+Vehicle > autopilot_system_id: 1
+Vehicle > autopilot_component_id: 1
+GSC > Sending: MISSION_COUNT(MISSION_COUNT_DATA { count: 7, target_system: 1, target_component: 1 })
+Vehicle > misssion request MISSION_REQUEST_DATA { seq: 0, target_system: 255, target_component: 0 }
+Vehicle > misssion request MISSION_REQUEST_DATA { seq: 1, target_system: 255, target_component: 0 }
+Vehicle > misssion request MISSION_REQUEST_DATA { seq: 2, target_system: 255, target_component: 0 }
+Vehicle > misssion request MISSION_REQUEST_DATA { seq: 3, target_system: 255, target_component: 0 }
+Vehicle > misssion request MISSION_REQUEST_DATA { seq: 4, target_system: 255, target_component: 0 }
+Vehicle > misssion request MISSION_REQUEST_DATA { seq: 5, target_system: 255, target_component: 0 }
+Vehicle > misssion request MISSION_REQUEST_DATA { seq: 6, target_system: 255, target_component: 0 }
+Vehicle > mission ack, MAV_MISSION_ACCEPTED
+```
+#### Additional info
+- [Upload mission](https://mavlink.io/en/services/mission.html#uploading_mission)
+
+
+
 ## TODO
-[IN-PROGRESS]5. Send RC overrides
-[IN-PROGRESS]5. Upload mission with waypoints
+[IN-PROGRESS]8. Send RC overrides
+[IN-PROGRESS]8. All included, mission upload, throttle, auto mode, rtl 
