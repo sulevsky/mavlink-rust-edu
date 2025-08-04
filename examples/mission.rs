@@ -86,6 +86,16 @@ fn main() {
     );
     println!("GSC > Sending: {mission_count_message:?}");
     arc.send_default(&mission_count_message).unwrap();
+    thread::sleep(Duration::from_secs(3));
+    println!("GSC > request to mission list from the vehicle");
+    let mission_request_list = mavlink::ardupilotmega::MavMessage::MISSION_REQUEST_LIST(
+        mavlink::ardupilotmega::MISSION_REQUEST_LIST_DATA {
+            target_system: autopilot_system_id,
+            target_component: autopilot_component_id,
+        },
+    );
+    println!("GSC > Sending: {mission_request_list:?}");
+    arc.send_default(&mission_request_list).unwrap();
     thread::sleep(Duration::from_secs(5));
 }
 
@@ -133,6 +143,7 @@ fn listen_for_messages(connection: Arc<Box<dyn MavConnection<MavMessage> + Send 
                 Ok((header, msg)) => match msg {
                     mavlink::ardupilotmega::MavMessage::COMMAND_ACK(data) => {
                         println!("Vehicle > mcommand {:?} is {:?}", data.command, data.result);
+                        println!("Vehicle > mcommand {:?} is {:?}", data.command, data.result);
                     }
                     mavlink::ardupilotmega::MavMessage::MISSION_ACK(data) => {
                         println!("Vehicle > mission ack, {:?}", data.mavtype);
@@ -146,6 +157,9 @@ fn listen_for_messages(connection: Arc<Box<dyn MavConnection<MavMessage> + Send 
                                 header.component_id,
                             ))
                             .unwrap();
+                    }
+                    mavlink::ardupilotmega::MavMessage::MISSION_COUNT(data) => {
+                        println!("Vehicle > mission count {:?}", data.count);
                     }
                     _ => {}
                 },

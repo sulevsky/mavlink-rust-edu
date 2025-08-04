@@ -130,7 +130,7 @@ autopilot_component_id: 1
 Sending param request read message: PARAM_REQUEST_READ(PARAM_REQUEST_READ_DATA { param_index: -1, target_system: 1, target_component: 1, param_id: [83, 73, 77, 95, 83, 80, 69, 69, 68, 85, 80, 0, 0, 0, 0, 0] })
 65535
 id:    SIM_SPEEDUP
-value: 42
+value: 1
 
 Sending param request set message: PARAM_SET(PARAM_SET_DATA { param_value: 42.0, target_system: 1, target_component: 1, param_id: [83, 73, 77, 95, 83, 80, 69, 69, 68, 85, 80, 0, 0, 0, 0, 0], param_type: MAV_PARAM_TYPE_REAL32 })
 Reading updated parameter
@@ -233,6 +233,9 @@ Vehicle > misssion request MISSION_REQUEST_DATA { seq: 4, target_system: 255, ta
 Vehicle > misssion request MISSION_REQUEST_DATA { seq: 5, target_system: 255, target_component: 0 }
 Vehicle > misssion request MISSION_REQUEST_DATA { seq: 6, target_system: 255, target_component: 0 }
 Vehicle > mission ack, MAV_MISSION_ACCEPTED
+GSC > request to mission list from the vehicle
+GSC > Sending: MISSION_REQUEST_LIST(MISSION_REQUEST_LIST_DATA { target_system: 1, target_component: 1 })
+Vehicle > mission count 7
 ```
 #### Additional info
 - [Upload mission](https://mavlink.io/en/services/mission.html#uploading_mission)
@@ -241,4 +244,3 @@ Vehicle > mission ack, MAV_MISSION_ACCEPTED
 
 ## TODO
 [IN-PROGRESS]8. Send RC overrides
-[IN-PROGRESS]8. All included, mission upload, throttle, auto mode, rtl 
