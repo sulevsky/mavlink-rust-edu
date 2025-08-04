@@ -233,14 +233,23 @@ Vehicle > misssion request MISSION_REQUEST_DATA { seq: 4, target_system: 255, ta
 Vehicle > misssion request MISSION_REQUEST_DATA { seq: 5, target_system: 255, target_component: 0 }
 Vehicle > misssion request MISSION_REQUEST_DATA { seq: 6, target_system: 255, target_component: 0 }
 Vehicle > mission ack, MAV_MISSION_ACCEPTED
-GSC > request to mission list from the vehicle
+GSC > request mission list from the vehicle
 GSC > Sending: MISSION_REQUEST_LIST(MISSION_REQUEST_LIST_DATA { target_system: 1, target_component: 1 })
 Vehicle > mission count 7
+GSC > Sending item request MISSION_REQUEST_INT(MISSION_REQUEST_INT_DATA { seq: 0, target_system: 1, target_component: 1 })
+Vehicle > mission item, x:-353632624, y:1491652370, z:584.08, command:MAV_CMD_NAV_WAYPOINT,
+GSC > Sending item request MISSION_REQUEST_INT(MISSION_REQUEST_INT_DATA { seq: 1, target_system: 1, target_component: 1 })
+Vehicle > mission item, x:0, y:0, z:50.0, command:MAV_CMD_NAV_TAKEOFF,
+GSC > Sending item request MISSION_REQUEST_INT(MISSION_REQUEST_INT_DATA { seq: 2, target_system: 1, target_component: 1 })
+Vehicle > mission item, x:-353612608, y:1491651712, z:100.0, command:MAV_CMD_NAV_WAYPOINT,
+GSC > Sending item request MISSION_REQUEST_INT(MISSION_REQUEST_INT_DATA { seq: 3, target_system: 1, target_component: 1 })
+Vehicle > mission item, x:-353622592, y:1491661696, z:100.0, command:MAV_CMD_NAV_WAYPOINT,
+GSC > Sending item request MISSION_REQUEST_INT(MISSION_REQUEST_INT_DATA { seq: 4, target_system: 1, target_component: 1 })
+Vehicle > mission item, x:-353632576, y:1491671808, z:100.0, command:MAV_CMD_NAV_WAYPOINT,
+GSC > Sending item request MISSION_REQUEST_INT(MISSION_REQUEST_INT_DATA { seq: 5, target_system: 1, target_component: 1 })
+Vehicle > mission item, x:-353642592, y:1491681664, z:100.0, command:MAV_CMD_NAV_WAYPOINT,
+GSC > Sending item request MISSION_REQUEST_INT(MISSION_REQUEST_INT_DATA { seq: 6, target_system: 1, target_component: 1 })
+Vehicle > mission item, x:-353652576, y:1491691776, z:100.0, command:MAV_CMD_NAV_WAYPOINT,
 ```
 #### Additional info
 - [Upload mission](https://mavlink.io/en/services/mission.html#uploading_mission)
-
-
-
-## TODO
-[IN-PROGRESS]8. Send RC overrides

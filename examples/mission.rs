@@ -74,7 +74,7 @@ fn main() {
     println!("Vehicle > autopilot_system_id: {autopilot_system_id}");
     println!("Vehicle > autopilot_component_id: {autopilot_component_id}");
     let arc = Arc::new(connection);
-    listen_for_messages(arc.clone());
+    listen_for_messages(arc.clone(), autopilot_system_id, autopilot_component_id);
 
     thread::sleep(Duration::from_secs(2));
     let mission_count_message = mavlink::ardupilotmega::MavMessage::MISSION_COUNT(
@@ -87,7 +87,7 @@ fn main() {
     println!("GSC > Sending: {mission_count_message:?}");
     arc.send_default(&mission_count_message).unwrap();
     thread::sleep(Duration::from_secs(3));
-    println!("GSC > request to mission list from the vehicle");
+    println!("GSC > request mission list from the vehicle");
     let mission_request_list = mavlink::ardupilotmega::MavMessage::MISSION_REQUEST_LIST(
         mavlink::ardupilotmega::MISSION_REQUEST_LIST_DATA {
             target_system: autopilot_system_id,
@@ -96,7 +96,8 @@ fn main() {
     );
     println!("GSC > Sending: {mission_request_list:?}");
     arc.send_default(&mission_request_list).unwrap();
-    thread::sleep(Duration::from_secs(5));
+
+    thread::sleep(Duration::from_secs(30));
 }
 
 fn fetch_system_id(connection: &Box<dyn MavConnection<MavMessage> + Send + Sync>) -> (u8, u8) {
@@ -136,45 +137,91 @@ fn create_mission_item(
     )
 }
 
-fn listen_for_messages(connection: Arc<Box<dyn MavConnection<MavMessage> + Send + Sync>>) {
+fn listen_for_messages(
+    connection: Arc<Box<dyn MavConnection<MavMessage> + Send + Sync>>,
+    target_system: u8,
+    target_component: u8,
+) {
     thread::spawn({
-        move || loop {
-            match connection.try_recv() {
-                Ok((header, msg)) => match msg {
-                    mavlink::ardupilotmega::MavMessage::COMMAND_ACK(data) => {
-                        println!("Vehicle > mcommand {:?} is {:?}", data.command, data.result);
-                        println!("Vehicle > mcommand {:?} is {:?}", data.command, data.result);
-                    }
-                    mavlink::ardupilotmega::MavMessage::MISSION_ACK(data) => {
-                        println!("Vehicle > mission ack, {:?}", data.mavtype);
-                    }
-                    mavlink::ardupilotmega::MavMessage::MISSION_REQUEST(data) => {
-                        println!("Vehicle > misssion request {:?}", data);
-                        connection
-                            .send_default(&create_mission_item(
-                                data.seq,
-                                header.system_id,
-                                header.component_id,
-                            ))
-                            .unwrap();
-                    }
-                    mavlink::ardupilotmega::MavMessage::MISSION_COUNT(data) => {
-                        println!("Vehicle > mission count {:?}", data.count);
-                    }
-                    _ => {}
-                },
-                Err(MessageReadError::Io(e)) => {
-                    if e.kind() == std::io::ErrorKind::WouldBlock {
-                        thread::sleep(Duration::from_secs(1));
-                        continue;
+        move || {
+            let mut items_count: Option<u16> = None;
+            let mut last_request_item_seq: Option<u16> = None;
+            let mut received: bool = false;
+            loop {
+                if let Some(count) = items_count {
+                    if let Some(last_item_seq) = last_request_item_seq {
+                        if received && last_item_seq < (count - 1) {
+                            last_request_item_seq = Some(last_item_seq + 1);
+                            let mission_request_item =
+                                mavlink::ardupilotmega::MavMessage::MISSION_REQUEST_INT(
+                                    mavlink::ardupilotmega::MISSION_REQUEST_INT_DATA {
+                                        target_system,
+                                        target_component,
+                                        seq: last_item_seq + 1,
+                                    },
+                                );
+                            println!("GSC > Sending item request {mission_request_item:?}");
+                            connection.send_default(&mission_request_item).unwrap();
+                            received = false;
+                        }
                     } else {
+                        let mission_request_item =
+                            mavlink::ardupilotmega::MavMessage::MISSION_REQUEST_INT(
+                                mavlink::ardupilotmega::MISSION_REQUEST_INT_DATA {
+                                    target_system,
+                                    target_component,
+                                    seq: 0,
+                                },
+                            );
+                        println!("GSC > Sending item request {mission_request_item:?}");
+                        connection.send_default(&mission_request_item).unwrap();
+                        last_request_item_seq = Some(0);
+                    }
+                }
+                match connection.try_recv() {
+                    Ok((_, msg)) => match msg {
+                        mavlink::ardupilotmega::MavMessage::COMMAND_ACK(data) => {
+                            println!("Vehicle > command {:?} is {:?}", data.command, data.result);
+                        }
+                        mavlink::ardupilotmega::MavMessage::MISSION_ACK(data) => {
+                            println!("Vehicle > mission ack, {:?}", data.mavtype);
+                        }
+                        mavlink::ardupilotmega::MavMessage::MISSION_REQUEST(data) => {
+                            println!("Vehicle > misssion request {:?}", data);
+                            connection
+                                .send_default(&create_mission_item(
+                                    data.seq,
+                                    target_system,
+                                    target_component,
+                                ))
+                                .unwrap();
+                        }
+                        mavlink::ardupilotmega::MavMessage::MISSION_COUNT(data) => {
+                            println!("Vehicle > mission count {:?}", data.count);
+                            items_count = Some(data.count);
+                        }
+                        mavlink::ardupilotmega::MavMessage::MISSION_ITEM_INT(data) => {
+                            println!(
+                                "Vehicle > mission item, x:{:?}, y:{:?}, z:{:?}, command:{:?},",
+                                data.x, data.y, data.z, data.command,
+                            );
+                            received = true;
+                        }
+                        _ => {}
+                    },
+                    Err(MessageReadError::Io(e)) => {
+                        if e.kind() == std::io::ErrorKind::WouldBlock {
+                            thread::sleep(Duration::from_secs(1));
+                            continue;
+                        } else {
+                            println!("recv error: {e:?}");
+                            panic!()
+                        }
+                    }
+                    Err(e) => {
                         println!("recv error: {e:?}");
                         panic!()
                     }
-                }
-                Err(e) => {
-                    println!("recv error: {e:?}");
-                    panic!()
                 }
             }
         }
